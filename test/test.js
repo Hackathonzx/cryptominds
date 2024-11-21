@@ -11,52 +11,52 @@ describe("AI-Powered Multi-Chain Portfolio Advisor", function () {
     // Deploy RewardToken - No constructor parameters
     const RewardToken = await ethers.getContractFactory("RewardToken");
     rewardToken = await RewardToken.deploy();
-    await rewardToken.waitForDeployment();
+    await rewardToken.deployTransaction.wait(); // Wait for deployment
 
     // Deploy Governance - Assuming it doesn't need parameters
     const Governance = await ethers.getContractFactory("Governance");
     governance = await Governance.deploy(); // No parameters passed unless specified
-    await governance.waitForDeployment();
+    await governance.deployTransaction.wait(); // Wait for deployment
 
     // Deploy SecurityLayer - No constructor parameters
     const SecurityLayer = await ethers.getContractFactory("SecurityLayer");
     securityLayer = await SecurityLayer.deploy();
-    await securityLayer.waitForDeployment();
+    await securityLayer.deployTransaction.wait(); // Wait for deployment
 
     // Deploy OracleConnector - No constructor parameters
     const OracleConnector = await ethers.getContractFactory("OracleConnector");
     oracleConnector = await OracleConnector.deploy();
-    await oracleConnector.waitForDeployment();
+    await oracleConnector.deployTransaction.wait(); // Wait for deployment
 
     // Deploy Staking - Expects rewardToken address
     const Staking = await ethers.getContractFactory("Staking");
-    staking = await Staking.deploy(rewardToken.target); // Ensure rewardToken.target is the correct address
-    await staking.waitForDeployment();
+    staking = await Staking.deploy(rewardToken.address, ethers.utils.parseEther("0.01")); 
+    await staking.deployTransaction.wait(); // Wait for deployment
 
     // Deploy PortfolioManager - Requires SecurityLayer, OracleConnector, Staking, Governance addresses
     const PortfolioManager = await ethers.getContractFactory("PortfolioManager");
     portfolioManager = await PortfolioManager.deploy(
-      securityLayer.target,
-      oracleConnector.target,
-      staking.target,
-      governance.target // Ensure governance is passed if required
+      securityLayer.address,
+      oracleConnector.address,
+      staking.address,
+      governance.address
     );
-    await portfolioManager.waitForDeployment();
+    await portfolioManager.deployTransaction.wait(); // Wait for deployment
   });
 
   it("should deploy all contracts successfully", async function () {
-    expect(rewardToken.target).to.properAddress;
-    expect(governance.target).to.properAddress;
-    expect(securityLayer.target).to.properAddress;
-    expect(oracleConnector.target).to.properAddress;
-    expect(staking.target).to.properAddress;
-    expect(portfolioManager.target).to.properAddress;
+    expect(rewardToken.address).to.properAddress;
+    expect(governance.address).to.properAddress;
+    expect(securityLayer.address).to.properAddress;
+    expect(oracleConnector.address).to.properAddress;
+    expect(staking.address).to.properAddress;
+    expect(portfolioManager.address).to.properAddress;
   });
 
   // RewardToken Tests
   it("should mint tokens to a user", async function () {
-    await rewardToken.mint(user1.address, ethers.parseEther("100"));
-    expect(await rewardToken.balanceOf(user1.address)).to.equal(ethers.parseEther("100"));
+    await rewardToken.mint(user1.address, ethers.utils.parseEther("100"));
+    expect(await rewardToken.balanceOf(user1.address)).to.equal(ethers.utils.parseEther("100"));
   });
 
   // Governance Tests
@@ -82,20 +82,20 @@ describe("AI-Powered Multi-Chain Portfolio Advisor", function () {
 
   // OracleConnector Tests
   it("should set and get oracle data", async function () {
-    await oracleConnector.setOracleData("BTC/USD", ethers.parseEther("60000"));
+    await oracleConnector.setOracleData("BTC/USD", ethers.utils.parseEther("60000"));
     const btcPrice = await oracleConnector.getOracleData("BTC/USD");
-    expect(btcPrice).to.equal(ethers.parseEther("60000"));
+    expect(btcPrice).to.equal(ethers.utils.parseEther("60000"));
   });
 
   // Staking Tests
   it("should allow staking and reward distribution", async function () {
     // Mint and approve tokens
-    await rewardToken.mint(user1.address, ethers.parseEther("50"));
-    await rewardToken.connect(user1).approve(staking.target, ethers.parseEther("50"));
+    await rewardToken.mint(user1.address, ethers.utils.parseEther("50"));
+    await rewardToken.connect(user1).approve(staking.address, ethers.utils.parseEther("50"));
 
     // Stake tokens
-    await staking.connect(user1).stake(ethers.parseEther("50"));
-    expect(await staking.balanceOf(user1.address)).to.equal(ethers.parseEther("50"));
+    await staking.connect(user1).stake(ethers.utils.parseEther("50"));
+    expect(await staking.balanceOf(user1.address)).to.equal(ethers.utils.parseEther("50"));
 
     // Distribute rewards
     await staking.distributeRewards();
@@ -106,8 +106,8 @@ describe("AI-Powered Multi-Chain Portfolio Advisor", function () {
   // PortfolioManager Tests
   it("should rebalance portfolio based on oracle data", async function () {
     // Simulate oracle data updates
-    await oracleConnector.setOracleData("BTC/USD", ethers.parseEther("60000"));
-    await oracleConnector.setOracleData("ETH/USD", ethers.parseEther("4000"));
+    await oracleConnector.setOracleData("BTC/USD", ethers.utils.parseEther("60000"));
+    await oracleConnector.setOracleData("ETH/USD", ethers.utils.parseEther("4000"));
 
     // Perform rebalance
     const rebalanceTx = await portfolioManager.rebalancePortfolio(user1.address);
