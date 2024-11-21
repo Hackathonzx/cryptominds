@@ -1,113 +1,135 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("StoryCrafters Contracts", function () {
-  let GuildSystem, guildSystem;
-  let NFTMarketplace, nftMarketplace;
-  let StoryNFT, storyNFT;
-  let Voting, voting;
-  let owner, addr1, addr2;
+describe("AI-Powered Multi-Chain Portfolio Advisor", function () {
+  let rewardToken, governance, securityLayer, oracleConnector, staking, portfolioManager;
+  let owner, user1, user2;
 
-  beforeEach(async function () {
-    [owner, addr1, addr2] = await ethers.getSigners();
+  before(async function () {
+    [owner, user1, user2] = await ethers.getSigners();
 
-    // Deploy GuildSystem contract
-    GuildSystem = await ethers.getContractFactory("GuildSystem");
-    guildSystem = await GuildSystem.deploy();
-    await guildSystem.waitForDeployment();
+    // Deploy RewardToken - No constructor parameters
+    const RewardToken = await ethers.getContractFactory("RewardToken");
+    rewardToken = await RewardToken.deploy();
+    await rewardToken.waitForDeployment();
 
-    // Deploy StoryNFT contract
-    StoryNFT = await ethers.getContractFactory("StoryNFT");
-    storyNFT = await StoryNFT.deploy();
-    await storyNFT.waitForDeployment();
+    // Deploy Governance - Assuming it doesn't need parameters
+    const Governance = await ethers.getContractFactory("Governance");
+    governance = await Governance.deploy(); // No parameters passed unless specified
+    await governance.waitForDeployment();
 
-    // Deploy NFTMarketplace contract
-    NFTMarketplace = await ethers.getContractFactory("NFTMarketplace");
-    nftMarketplace = await NFTMarketplace.deploy();
-    await nftMarketplace.waitForDeployment();
+    // Deploy SecurityLayer - No constructor parameters
+    const SecurityLayer = await ethers.getContractFactory("SecurityLayer");
+    securityLayer = await SecurityLayer.deploy();
+    await securityLayer.waitForDeployment();
 
-    // Deploy Voting contract
-    Voting = await ethers.getContractFactory("Voting");
-    voting = await Voting.deploy();
-    await voting.waitForDeployment();
+    // Deploy OracleConnector - No constructor parameters
+    const OracleConnector = await ethers.getContractFactory("OracleConnector");
+    oracleConnector = await OracleConnector.deploy();
+    await oracleConnector.waitForDeployment();
+
+    // Deploy Staking - Expects rewardToken address
+    const Staking = await ethers.getContractFactory("Staking");
+    staking = await Staking.deploy(rewardToken.target); // Ensure rewardToken.target is the correct address
+    await staking.waitForDeployment();
+
+    // Deploy PortfolioManager - Requires SecurityLayer, OracleConnector, Staking, Governance addresses
+    const PortfolioManager = await ethers.getContractFactory("PortfolioManager");
+    portfolioManager = await PortfolioManager.deploy(
+      securityLayer.target,
+      oracleConnector.target,
+      staking.target,
+      governance.target // Ensure governance is passed if required
+    );
+    await portfolioManager.waitForDeployment();
   });
 
-  // GuildSystem Tests
-  describe("GuildSystem", function () {
-    it("Should allow users to create a guild", async function () {
-      await guildSystem.createGuild("Guild1");
-      const guild = await guildSystem.getGuild(1);
-      expect(guild.name).to.equal("Guild1");
-    });
-
-    it("Should allow joining a guild", async function () {
-      await guildSystem.createGuild("Guild2");
-      await guildSystem.connect(addr1).joinGuild(1);
-      const guildMembers = await guildSystem.getGuildMembers(1);
-      expect(guildMembers).to.include(addr1.address);
-    });
+  it("should deploy all contracts successfully", async function () {
+    expect(rewardToken.target).to.properAddress;
+    expect(governance.target).to.properAddress;
+    expect(securityLayer.target).to.properAddress;
+    expect(oracleConnector.target).to.properAddress;
+    expect(staking.target).to.properAddress;
+    expect(portfolioManager.target).to.properAddress;
   });
 
-  // NFTMarketplace Tests
-  describe("NFTMarketplace", function () {
-    beforeEach(async function () {
-      // Mint an NFT to owner and approve the marketplace
-      await storyNFT.mintNFT(owner.address, "marketplaceURI");
-      await storyNFT.approve(nftMarketplace.address, 1);
-    });
-
-    it("Should list NFT on marketplace", async function () {
-      await nftMarketplace.listNFT(storyNFT.address, 1, ethers.parseEther("1"));
-      const listing = await nftMarketplace.getListing(storyNFT.address, 1);
-      expect(listing.price).to.equal(ethers.utils.parseEther("1"));
-    });
-
-    it("Should allow user to buy NFT from marketplace", async function () {
-      await nftMarketplace.listNFT(storyNFT.address, 1, ethers.parseEther("1"));
-      await nftMarketplace.connect(addr1).buyNFT(storyNFT.address, 1, { value: ethers.parseEther("1") });
-      const newOwner = await storyNFT.ownerOf(1);
-      expect(newOwner).to.equal(addr1.address);
-    });
+  // RewardToken Tests
+  it("should mint tokens to a user", async function () {
+    await rewardToken.mint(user1.address, ethers.parseEther("100"));
+    expect(await rewardToken.balanceOf(user1.address)).to.equal(ethers.parseEther("100"));
   });
 
-  // StoryNFT Tests
-  describe("StoryNFT", function () {
-    it("Should mint a new NFT and assign it to owner", async function () {
-      await storyNFT.mintNFT(owner.address, "tokenURI1");
-      const balance = await storyNFT.balanceOf(owner.address);
-      expect(balance).to.equal(1);
-    });
+  // Governance Tests
+  it("should allow governance proposals and voting", async function () {
+    const tx = await governance.createProposal("Increase staking rewards");
+    await tx.wait();
 
-    it("Should return the correct token URI", async function () {
-      await storyNFT.mintNFT(owner.address, "tokenURI2");
-      const tokenURI = await storyNFT.tokenURI(1);
-      expect(tokenURI).to.equal("tokenURI2");
-    });
+    const proposal = await governance.getProposal(0);
+    expect(proposal.description).to.equal("Increase staking rewards");
+
+    await governance.connect(owner).vote(0, true); // Vote "yes"
+    const proposalStatus = await governance.getProposalStatus(0);
+    expect(proposalStatus.approved).to.be.true;
   });
 
-  // Voting Tests
-  describe("Voting", function () {
-    beforeEach(async function () {
-      // Create a poll
-      await voting.createPoll("Test Poll", ["Option A", "Option B"]);
-    });
+  // SecurityLayer Tests
+  it("should verify security access", async function () {
+    await securityLayer.setWhitelisted(user1.address, true);
+    expect(await securityLayer.isWhitelisted(user1.address)).to.be.true;
 
-    it("Should allow users to cast a vote", async function () {
-      await voting.connect(addr1).castVote(0, 1);
-      const result = await voting.getVotes(0, 1);
-      expect(result).to.equal(1);
-    });
+    expect(await securityLayer.isWhitelisted(user2.address)).to.be.false;
+  });
 
-    it("Should tally votes correctly", async function () {
-      await voting.connect(addr1).castVote(0, 0);
-      await voting.connect(addr2).castVote(0, 0);
-      const result = await voting.getVotes(0, 0);
-      expect(result).to.equal(2);
-    });
+  // OracleConnector Tests
+  it("should set and get oracle data", async function () {
+    await oracleConnector.setOracleData("BTC/USD", ethers.parseEther("60000"));
+    const btcPrice = await oracleConnector.getOracleData("BTC/USD");
+    expect(btcPrice).to.equal(ethers.parseEther("60000"));
+  });
 
-    it("Should prevent double voting from the same address", async function () {
-      await voting.connect(addr1).castVote(0, 0);
-      await expect(voting.connect(addr1).castVote(0, 0)).to.be.revertedWith("Already voted");
-    });
+  // Staking Tests
+  it("should allow staking and reward distribution", async function () {
+    // Mint and approve tokens
+    await rewardToken.mint(user1.address, ethers.parseEther("50"));
+    await rewardToken.connect(user1).approve(staking.target, ethers.parseEther("50"));
+
+    // Stake tokens
+    await staking.connect(user1).stake(ethers.parseEther("50"));
+    expect(await staking.balanceOf(user1.address)).to.equal(ethers.parseEther("50"));
+
+    // Distribute rewards
+    await staking.distributeRewards();
+    const rewards = await rewardToken.balanceOf(user1.address);
+    expect(rewards).to.be.gt(0);
+  });
+
+  // PortfolioManager Tests
+  it("should rebalance portfolio based on oracle data", async function () {
+    // Simulate oracle data updates
+    await oracleConnector.setOracleData("BTC/USD", ethers.parseEther("60000"));
+    await oracleConnector.setOracleData("ETH/USD", ethers.parseEther("4000"));
+
+    // Perform rebalance
+    const rebalanceTx = await portfolioManager.rebalancePortfolio(user1.address);
+    await rebalanceTx.wait();
+
+    const allocation = await portfolioManager.getPortfolioAllocation(user1.address);
+    expect(allocation).to.not.be.empty;
+  });
+
+  // Integration Tests
+  it("should integrate governance and security with portfolio updates", async function () {
+    // Create and approve proposal to enable security checks for rebalancing
+    await governance.createProposal("Enable security checks for portfolio updates");
+    await governance.connect(owner).vote(0, true);
+    expect((await governance.getProposalStatus(0)).approved).to.be.true;
+
+    // Simulate security layer restricting user2
+    await securityLayer.setWhitelisted(user2.address, false);
+
+    // Attempt portfolio update for user2
+    await expect(portfolioManager.rebalancePortfolio(user2.address)).to.be.revertedWith(
+      "SecurityLayer: User not whitelisted"
+    );
   });
 });
