@@ -27,7 +27,7 @@ module.exports = {
           network: "cronosTestnet",
           chainId: 338,
           urls: {
-            apiURL: process.env.ETHERSCAN_API_KEY, // <-- replace the API service url and API key
+            apiURL: "https://explorer-api.cronos.org/testnet/api/v1/hardhat/contract?apikey=process.env.API_KEY",// <-- replace the API service url and API key
             browserURL: "http://explorer.cronos.org/testnet" // <-- replace the Cronos explorer url
           }
         }
