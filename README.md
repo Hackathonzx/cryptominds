@@ -65,19 +65,24 @@ npx hardhat run ignition/modules/deploy.js --network cronosTestnet
 
 Here are the deployed addresses:
 
-RewardToken deployed to: 0x359451AC3C73827A7653C0Ab7D30243844a55447
+- RewardToken deployed to: 0x359451AC3C73827A7653C0Ab7D30243844a55447
+- Link to the explorer: https://explorer.cronos.org/testnet/address/0x359451ac3c73827a7653c0ab7d30243844a55447
 
-Governance deployed to: 0x069F92465a8795a06A28B1e85f320D57CE29Bc8F
+- Governance deployed to: 0x069F92465a8795a06A28B1e85f320D57CE29Bc8F
+- Link to explorer: https://explorer.cronos.org/testnet/address/0x069f92465a8795a06a28b1e85f320d57ce29bc8f
 
-SecurityLayer deployed to: 0x7c9D4E3769FD085566de1DB20E5703D3Ec50d37f
+- SecurityLayer deployed to: 0x7c9D4E3769FD085566de1DB20E5703D3Ec50d37f
+- Link to explorer: https://explorer.cronos.org/testnet/address/0x7c9d4e3769fd085566de1db20e5703d3ec50d37f
 
-OracleConnector deployed to: 0xe34c86A03F17E29F77beeE7c898Adae4dD578006
+- OracleConnector deployed to: 0xe34c86A03F17E29F77beeE7c898Adae4dD578006
+- Link to explorer: https://explorer.cronos.org/testnet/address/0xe34c86a03f17e29f77beee7c898adae4dd578006
 
-Staking deployed to: 0x7516abedc7e8ca01143ad636a6963B9887FC7Cf6
+- Staking deployed to: 0x7516abedc7e8ca01143ad636a6963B9887FC7Cf6
+- Link to explorer: https://explorer.cronos.org/testnet/address/0x7516abedc7e8ca01143ad636a6963b9887fc7cf6
 
-PortfolioManager deployed to: 0xA0BF7F60ec762cc7b88dEc415D46F12cFF130a55
+- PortfolioManager deployed to: 0xA0BF7F60ec762cc7b88dEc415D46F12cFF130a55
+- Link to explorer: https://explorer.cronos.org/testnet/address/0xa0bf7f60ec762cc7b88dec415d46f12cff130a55
 
-Link to the explorer:
 
 ## Testing
 
