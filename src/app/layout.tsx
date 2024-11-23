@@ -7,7 +7,7 @@ import { AppBar, Toolbar, Typography, Button, IconButton, CssBaseline, ThemeProv
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import { useState, useMemo } from 'react';
 import "../styles/globals.css";
-import theme from '../styles/theme';
+import { lightTheme, darkTheme } from '../styles/theme';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,14 +37,7 @@ export default function RootLayout({
   };
 
   const themeMode = useMemo(
-    () =>
-      createTheme({
-        ...theme,
-        palette: {
-          ...theme.palette,
-          mode: darkMode ? 'dark' : 'light',
-        },
-      }),
+    () => (darkMode ? darkTheme : lightTheme),
     [darkMode]
   );
 

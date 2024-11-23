@@ -11,40 +11,40 @@ export default function Portfolio() {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Real-Time Insights</Typography>
-              <Typography variant="body2">Current market trends and insights...</Typography>
+              <Typography variant="h6" color="textPrimary">Real-Time Insights</Typography>
+              <Typography variant="body2" color="textSecondary">Current market trends and insights...</Typography>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6">AI Recommendations</Typography>
-              <Typography variant="body2">AI-driven portfolio suggestions...</Typography>
+              <Typography variant="h6" color="textPrimary">AI Recommendations</Typography>
+              <Typography variant="body2" color="textSecondary">AI-driven portfolio suggestions...</Typography>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Performance Metrics</Typography>
-              <Typography variant="body2">Your portfolio performance over time...</Typography>
+              <Typography variant="h6" color="textPrimary">Performance Metrics</Typography>
+              <Typography variant="body2" color="textSecondary">Your portfolio performance over time...</Typography>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Asset Allocation</Typography>
-              <Typography variant="body2">Distribution of assets in your portfolio...</Typography>
+              <Typography variant="h6" color="textPrimary">Asset Allocation</Typography>
+              <Typography variant="body2" color="textSecondary">Distribution of assets in your portfolio...</Typography>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Risk Analysis</Typography>
-              <Typography variant="body2">Risk assessment and management...</Typography>
+              <Typography variant="h6" color="textPrimary">Risk Analysis</Typography>
+              <Typography variant="body2" color="textSecondary">Risk assessment and management...</Typography>
             </CardContent>
           </Card>
         </Grid>
