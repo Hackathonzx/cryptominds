@@ -3,10 +3,11 @@
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { Brightness4, Brightness7 } from '@mui/icons-material';
-import { useState } from 'react';
-import "../../styles/globals.css";
+import { useState, useMemo } from 'react';
+import "../styles/globals.css";
+import theme from '../styles/theme';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,22 +36,37 @@ export default function RootLayout({
     setDarkMode(!darkMode);
   };
 
+  const themeMode = useMemo(
+    () =>
+      createTheme({
+        ...theme,
+        palette: {
+          ...theme.palette,
+          mode: darkMode ? 'dark' : 'light',
+        },
+      }),
+    [darkMode]
+  );
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${darkMode ? 'dark' : ''} antialiased`}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" className="flex-grow">
-              CryptoMinds
-            </Typography>
-            <IconButton color="inherit" onClick={handleThemeChange}>
-              {darkMode ? <Brightness7 /> : <Brightness4 />}
-            </IconButton>
-            <Button color="inherit">Connect Wallet</Button>
-          </Toolbar>
-        </AppBar>
-        {children}
-      </body>
+      <ThemeProvider theme={themeMode}>
+        <CssBaseline />
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" className="flex-grow">
+                CryptoMinds
+              </Typography>
+              <IconButton color="inherit" onClick={handleThemeChange}>
+                {darkMode ? <Brightness7 /> : <Brightness4 />}
+              </IconButton>
+              <Button color="inherit">Connect Wallet</Button>
+            </Toolbar>
+          </AppBar>
+          {children}
+        </body>
+      </ThemeProvider>
     </html>
   );
 }

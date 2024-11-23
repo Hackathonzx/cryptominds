@@ -1,4 +1,5 @@
-import { Container, Typography, Paper, Button } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Container, Typography, Paper, Button, Card, CardContent } from '@mui/material';
 
 export default function Config() {
   return (
@@ -6,20 +7,26 @@ export default function Config() {
       <Typography variant="h4" gutterBottom>
         Configuration Settings
       </Typography>
-      <Paper elevation={3} className="p-4">
-        <Typography variant="h6">Preferences</Typography>
-        {/* Add preferences components here */}
-      </Paper>
-      <Paper elevation={3} className="p-4 mt-4">
-        <Typography variant="h6">Wallet Management</Typography>
-        <Button variant="contained" color="primary">
-          Connect Wallet
-        </Button>
-      </Paper>
-      <Paper elevation={3} className="p-4 mt-4">
-        <Typography variant="h6">Staking Options</Typography>
-        {/* Add staking options components here */}
-      </Paper>
+      <Card className="mt-4">
+        <CardContent>
+          <Typography variant="h6">Preferences</Typography>
+          <Typography variant="body2">Set your preferences for the portfolio advisor...</Typography>
+        </CardContent>
+      </Card>
+      <Card className="mt-4">
+        <CardContent>
+          <Typography variant="h6">Wallet Management</Typography>
+          <Button variant="contained" color="primary">
+            Connect Wallet
+          </Button>
+        </CardContent>
+      </Card>
+      <Card className="mt-4">
+        <CardContent>
+          <Typography variant="h6">Staking Options</Typography>
+          <Typography variant="body2">Manage your staking options and rewards...</Typography>
+        </CardContent>
+      </Card>
     </Container>
   );
 }

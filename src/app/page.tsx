@@ -1,4 +1,5 @@
-import { Container, Typography, Button } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Container, Typography, Button, Card, CardContent } from '@mui/material';
 import Image from 'next/image';
 
 export default function Home() {
@@ -10,7 +11,6 @@ export default function Home() {
       <Typography variant="h6" gutterBottom>
         Your AI-powered multi-chain portfolio advisor
       </Typography>
-      <Image src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
       <div className="mt-4">
         <Button variant="contained" color="primary" href="/portfolio">
           View Portfolio
@@ -19,6 +19,14 @@ export default function Home() {
           Configure Settings
         </Button>
       </div>
+      <Card className="mt-4">
+        <CardContent>
+          <Typography variant="h6">About CryptoMinds</Typography>
+          <Typography variant="body2">
+            CryptoMinds is a cutting-edge AI-driven portfolio advisor built on the Cronos blockchain. It leverages the Crypto.com AI Agent SDK and integrates with Cronos APIs, offering dynamic portfolio management based on real-time data and user preferences.
+          </Typography>
+        </CardContent>
+      </Card>
     </Container>
   );
 }
